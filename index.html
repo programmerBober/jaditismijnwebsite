@@ -63,17 +63,6 @@
       transform: none !important;
       transition: none !important;
     }
-    .counter {
-      position: absolute;
-      bottom: 2rem;
-      pointer-events: auto;
-      opacity: 0.8;
-      transition: opacity 0.2s, transform 0.2s;
-    }
-    .counter:hover {
-      opacity: 1;
-      transform: translateY(-2px);
-    }
     .tool-link {
       margin-top: 1.5rem;
       pointer-events: auto;
@@ -132,7 +121,6 @@
     <a href="https://mason363.github.io/NumPlay/customize/#games=numdrive%2Ccrossyroad%2Cblockblast%2Csuika%2Ctetris%2Cbreakout%2Cg2048%2Cconnectfour%2Csudoku%2Cflappybird%2Ctwoplayer%2Cchess%2Cflappydunk%2Cdinorun%2Csnake%2Cuttt%2Ctombofthemask%2Cstickmanhook%2Cuno%2Cnumblocks%2Cnumdash%2Cpacman%2Cdonkeykong&space=e26" target="_blank" rel="noopener noreferrer" class="tool-link">
       spellen rekenmachine
     </a>
-    <div class="counter" id="counter-box"></div>
   </main>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
@@ -397,31 +385,6 @@
     }
 
     animate();
-
-    // --- Anti-Spam Bezoekersteller ---
-    (function initCounter() {
-      const counterBox = document.getElementById('counter-box');
-      const LAST_VISIT_KEY = 'jaditis_last_visit_timestamp';
-      const COOLDOWN_MS = 12 * 60 * 60 * 1000; // 12 uur bescherming tegen spam refreshes
-      
-      const now = Date.now();
-      const lastVisit = localStorage.getItem(LAST_VISIT_KEY);
-      const isNewVisitor = !lastVisit || (now - parseInt(lastVisit, 10)) > COOLDOWN_MS;
-
-      const img = document.createElement('img');
-      img.alt = 'bezoekers';
-
-      if (isNewVisitor) {
-        // Uniek nieuw bezoek: verhoog live teller
-        localStorage.setItem(LAST_VISIT_KEY, now.toString());
-        img.src = 'https://hits.sh/jaditismijnwebsite.nl-uniek.svg?label=bezoekers&color=ffffff&labelColor=21262d&t=' + now;
-      } else {
-        // Bezoeker refresht alleen: haal gecachte versie via CDN op (telt NIET op)
-        img.src = 'https://images.weserv.nl/?url=hits.sh/jaditismijnwebsite.nl-uniek.svg?label=bezoekers&color=ffffff&labelColor=21262d';
-      }
-
-      counterBox.appendChild(img);
-    })();
 
     // --- Titel Klikker: 20 Escalatie-Zinnen ---
     (function initClicker() {
