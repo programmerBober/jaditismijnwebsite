@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ja echt</title>
+  <title>ja echt mijn website</title>
   <style>
     * {
       box-sizing: border-box;
@@ -50,20 +50,18 @@
       letter-spacing: -0.04em;
       color: #ffffff;
       text-shadow: 0 10px 40px rgba(0, 0, 0, 0.8);
-      transition: transform 0.1s ease;
       cursor: pointer;
       pointer-events: auto;
       text-align: center;
       max-width: 90vw;
-      padding: 0 1rem;
+      height: 180px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
       user-select: none;
       word-break: break-word;
-    }
-    h1:hover {
-      transform: scale(1.03);
-    }
-    h1:active, h1.pop {
-      transform: scale(0.96);
+      transform: none !important;
+      transition: none !important;
     }
     .counter {
       position: absolute;
@@ -105,7 +103,7 @@
   <div id="canvas-container"></div>
 
   <main class="ui-layer">
-    <h1 id="title">ja echt</h1>
+    <h1 id="title">ja echt mijn website</h1>
     <a href="https://mason363.github.io/NumPlay/customize/#games=numdrive%2Ccrossyroad%2Cblockblast%2Csuika%2Ctetris%2Cbreakout%2Cg2048%2Cconnectfour%2Csudoku%2Cflappybird%2Ctwoplayer%2Cchess%2Cflappydunk%2Cdinorun%2Csnake%2Cuttt%2Ctombofthemask%2Cstickmanhook%2Cuno%2Cnumblocks%2Cnumdash%2Cpacman%2Cdonkeykong&space=e26" target="_blank" rel="noopener noreferrer" class="tool-link">
       spellen rekenmachine
     </a>
@@ -268,7 +266,7 @@
     (function initClicker() {
       const titleEl = document.getElementById('title');
       const introPhrases = [
-        "ja echt",
+        "ja echt mijn website",
         "waarom geloof je me niet",
         "stop met klikken",
         "ik lieg niet",
@@ -297,11 +295,6 @@
         e.stopPropagation();
         clickCount = (clickCount + 1) % introPhrases.length;
         titleEl.textContent = introPhrases[clickCount];
-
-        // Subtiele pop-reactie
-        titleEl.classList.remove('pop');
-        void titleEl.offsetWidth;
-        titleEl.classList.add('pop');
 
         // Extra spin aan de 3D-kubussen geven
         if (typeof cubes !== 'undefined') {
