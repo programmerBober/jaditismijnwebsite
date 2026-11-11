@@ -45,19 +45,24 @@
       pointer-events: none;
     }
     h1 {
-      font-size: clamp(3.5rem, 12vw, 7.5rem);
+      font-size: clamp(2.5rem, 8vw, 6rem);
       font-weight: 800;
       letter-spacing: -0.04em;
       color: #ffffff;
       text-shadow: 0 10px 40px rgba(0, 0, 0, 0.8);
-      transition: transform 0.2s ease;
+      transition: transform 0.1s ease;
       cursor: pointer;
       pointer-events: auto;
+      text-align: center;
+      max-width: 90vw;
+      padding: 0 1rem;
+      user-select: none;
+      word-break: break-word;
     }
     h1:hover {
-      transform: scale(1.04);
+      transform: scale(1.03);
     }
-    h1:active {
+    h1:active, h1.pop {
       transform: scale(0.96);
     }
     .counter {
@@ -257,6 +262,55 @@
       }
 
       counterBox.appendChild(img);
+    })();
+
+    // --- Titel Klikker: 20 Escalatie-Zinnen ---
+    (function initClicker() {
+      const titleEl = document.getElementById('title');
+      const introPhrases = [
+        "ja echt",
+        "waarom geloof je me niet",
+        "stop met klikken",
+        "ik lieg niet",
+        "oké misschien een beetje",
+        "waarom ben je nog steeds hier",
+        "ga je huiswerk maken",
+        "serieus ga weg",
+        "dit kost mij stroom",
+        "er komt echt niks meer",
+        "kap nou maar",
+        "je muisknop gaat stuk",
+        "waarom luister je niet",
+        "laatste waarschuwing",
+        "ik meen het",
+        "nou goed dan...",
+        "je wilde dit zelf",
+        "bereid je voor",
+        "3...",
+        "2...",
+        "1..."
+      ];
+
+      let clickCount = 0;
+
+      titleEl.addEventListener('click', (e) => {
+        e.stopPropagation();
+        clickCount = (clickCount + 1) % introPhrases.length;
+        titleEl.textContent = introPhrases[clickCount];
+
+        // Subtiele pop-reactie
+        titleEl.classList.remove('pop');
+        void titleEl.offsetWidth;
+        titleEl.classList.add('pop');
+
+        // Extra spin aan de 3D-kubussen geven
+        if (typeof cubes !== 'undefined') {
+          cubes.forEach(c => {
+            c.rotSpeedX += (Math.random() - 0.5) * 0.1;
+            c.rotSpeedY += (Math.random() - 0.5) * 0.1;
+          });
+        }
+      });
     })();
   </script>
 </body>
