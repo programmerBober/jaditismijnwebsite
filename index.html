@@ -272,14 +272,14 @@
         synapticsBtn.style.display = 'none';
       }
 
-      // Intentionele brute lag-crunch freeze (100ms)
+      // Intentionele zware physics crunch freeze (180ms)
       const t0 = performance.now();
-      while (performance.now() - t0 < 100) {}
+      while (performance.now() - t0 < 180) {}
 
-      const count = 1500; // 1500 houten blokken die van hem afspatten
+      const count = 6500; // 6.500 individuele houten blokken voor gegarandeerde lag en brute chaos
       for (let i = 0; i < count; i++) {
-        const geom = woodGeoms[Math.floor(Math.random() * woodGeoms.length)];
-        const mat = woodMaterials[Math.floor(Math.random() * woodMaterials.length)];
+        const geom = woodGeoms[i % woodGeoms.length];
+        const mat = woodMaterials[i % woodMaterials.length];
         const mesh = new THREE.Mesh(geom, mat);
 
         // Spawn exact in de vorm van zijn silhouet
