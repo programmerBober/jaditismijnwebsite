@@ -8,8 +8,10 @@
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
       display: flex;
+      flex-direction: column;
       justify-content: center;
       align-items: center;
+      gap: 1.5rem;
       min-height: 100vh;
       background-color: #0d1117;
       color: #ffffff;
@@ -21,9 +23,19 @@
       letter-spacing: -0.03em;
       user-select: none;
     }
+    .counter {
+      opacity: 0.75;
+      transition: opacity 0.2s;
+    }
+    .counter:hover {
+      opacity: 1;
+    }
   </style>
 </head>
 <body>
   <h1>ja echt</h1>
+  <div class="counter">
+    <img src="https://hits.sh/jaditismijnwebsite.nl.svg?label=bezoekers&color=238636&labelColor=21262d" alt="bezoekers">
+  </div>
 </body>
 </html>
