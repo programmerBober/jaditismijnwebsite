@@ -278,7 +278,7 @@
         synapticsBtn.style.display = 'none';
       }
 
-      const count = 8000; // 8.000 houten blokken voor massale overload
+      const count = 24000; // 3x meer: exact 24.000 houten blokken voor maximale overload
       for (let i = 0; i < count; i++) {
         const geom = woodGeoms[i % woodGeoms.length];
         const mat = woodMaterials[i % woodMaterials.length];
@@ -379,9 +379,6 @@
           const tHitch = performance.now();
           while (performance.now() - tHitch < hitchTime) {}
         }
-        // Voelbare jitter-trilling
-        camera.position.x += (Math.random() - 0.5) * 1.5;
-        camera.position.y += (Math.random() - 0.5) * 1.5;
       }
 
       renderer.render(scene, camera);
