@@ -242,42 +242,48 @@
       metalness: 0.05
     }));
 
+    // Pre-allocated geoms voor snelle 1500-spawns
+    const woodGeoms = [0.35, 0.5, 0.7, 0.9, 1.15].map(s => new THREE.BoxGeometry(s, s, s));
     const debrisCubes = [];
 
     function explodeWoodenBlocks() {
-      // Intentionele micro-freeze / lag crunch (85ms) voor tactiele zwaarte
+      // Verwijder poppetje direct: het explodeert letterlijk uit elkaar
+      if (synapticsBtn) {
+        synapticsBtn.style.display = 'none';
+      }
+
+      // Intentionele brute lag-crunch freeze (100ms)
       const t0 = performance.now();
-      while (performance.now() - t0 < 85) {}
+      while (performance.now() - t0 < 100) {}
 
       // Positie linksboven in 3D-ruimte
       const spawnX = -camera.aspect * 15;
       const spawnY = 12;
       const spawnZ = 2;
 
-      const count = 350; // Massale explosie voor lichte framerate crunch
+      const count = 1500; // Exact 1500 houten blokken voor maximale chaos en echte lag
       for (let i = 0; i < count; i++) {
-        const size = Math.random() * 0.9 + 0.35;
-        const geom = new THREE.BoxGeometry(size, size, size);
+        const geom = woodGeoms[Math.floor(Math.random() * woodGeoms.length)];
         const mat = woodMaterials[Math.floor(Math.random() * woodMaterials.length)];
         const mesh = new THREE.Mesh(geom, mat);
 
         mesh.position.set(
-          spawnX + (Math.random() - 0.5) * 4,
-          spawnY + (Math.random() - 0.5) * 4,
-          spawnZ + (Math.random() - 0.5) * 6
+          spawnX + (Math.random() - 0.5) * 5,
+          spawnY + (Math.random() - 0.5) * 5,
+          spawnZ + (Math.random() - 0.5) * 8
         );
 
         mesh.rotation.set(Math.random() * Math.PI, Math.random() * Math.PI, Math.random() * Math.PI);
 
         debrisCubes.push({
           mesh: mesh,
-          vx: Math.random() * 26 + 6, // Schiet naar rechts/midden
-          vy: (Math.random() - 0.4) * 22,
-          vz: (Math.random() - 0.5) * 28,
-          rx: (Math.random() - 0.5) * 0.35,
-          ry: (Math.random() - 0.5) * 0.35,
-          rz: (Math.random() - 0.5) * 0.35,
-          decay: Math.random() * 0.006 + 0.003,
+          vx: Math.random() * 34 + 8, // Krachtige explosie naar rechts en naar voren
+          vy: (Math.random() - 0.35) * 26,
+          vz: (Math.random() - 0.5) * 36,
+          rx: (Math.random() - 0.5) * 0.45,
+          ry: (Math.random() - 0.5) * 0.45,
+          rz: (Math.random() - 0.5) * 0.45,
+          decay: Math.random() * 0.003 + 0.0015,
           life: 1.0
         });
 
@@ -286,8 +292,8 @@
 
       // Schokgolf naar de witte achtergrond-kubussen
       cubes.forEach(c => {
-        c.rotSpeedX += (Math.random() - 0.5) * 0.25;
-        c.rotSpeedY += (Math.random() - 0.5) * 0.25;
+        c.rotSpeedX += (Math.random() - 0.5) * 0.4;
+        c.rotSpeedY += (Math.random() - 0.5) * 0.4;
       });
     }
 
