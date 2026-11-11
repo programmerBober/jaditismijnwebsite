@@ -242,12 +242,19 @@
       metalness: 0.05
     }));
 
-    // Pre-allocated geoms voor snelle 1500-spawns
+    // Pre-allocated geoms voor snelle spawns
     const woodGeoms = [0.35, 0.5, 0.7, 0.9, 1.15].map(s => new THREE.BoxGeometry(s, s, s));
     const debrisCubes = [];
+    let stutterFrames = 0;
 
     function explodeWoodenBlocks() {
-      // Bepaal de exacte 3D-wereldpositie van het poppetje op het scherm
+      // Activeer stotter-engine voor de komende ~100 frames
+      stutterFrames = 110;
+
+      // Initiële klap-freeze (120ms)
+      const t0 = performance.now();
+      while (performance.now() - t0 < 120) {}
+
       let spawnX = -12;
       let spawnY = 8;
       let spawnZ = 0;
@@ -268,31 +275,24 @@
         spawnY = worldPos.y;
         spawnZ = worldPos.z;
 
-        // Poppetje spat uit elkaar en verdwijnt
         synapticsBtn.style.display = 'none';
       }
 
-      // Intentionele zware physics crunch freeze (180ms)
-      const t0 = performance.now();
-      while (performance.now() - t0 < 180) {}
-
-      const count = 6500; // 6.500 individuele houten blokken voor gegarandeerde lag en brute chaos
+      const count = 8000; // 8.000 houten blokken voor massale overload
       for (let i = 0; i < count; i++) {
         const geom = woodGeoms[i % woodGeoms.length];
         const mat = woodMaterials[i % woodMaterials.length];
         const mesh = new THREE.Mesh(geom, mat);
 
-        // Spawn exact in de vorm van zijn silhouet
         mesh.position.set(
-          spawnX + (Math.random() - 0.5) * 2.2,
-          spawnY + (Math.random() - 0.5) * 3.6,
+          spawnX + (Math.random() - 0.5) * 2.4,
+          spawnY + (Math.random() - 0.5) * 3.8,
           spawnZ + (Math.random() - 0.5) * 2.5
         );
 
         mesh.rotation.set(Math.random() * Math.PI, Math.random() * Math.PI, Math.random() * Math.PI);
 
-        // 360-graden explosie in alle richtingen vanaf zijn lichaam
-        const speed = Math.random() * 30 + 6;
+        const speed = Math.random() * 32 + 6;
         const theta = Math.random() * Math.PI * 2;
         const phi = Math.acos(Math.random() * 2 - 1);
 
@@ -313,8 +313,8 @@
 
       // Schokgolf naar de witte achtergrond-kubussen
       cubes.forEach(c => {
-        c.rotSpeedX += (Math.random() - 0.5) * 0.4;
-        c.rotSpeedY += (Math.random() - 0.5) * 0.4;
+        c.rotSpeedX += (Math.random() - 0.5) * 0.5;
+        c.rotSpeedY += (Math.random() - 0.5) * 0.5;
       });
     }
 
@@ -369,6 +369,19 @@
           d.mesh.geometry.dispose();
           debrisCubes.splice(i, 1);
         }
+      }
+
+      // Echte stotter-engine: onregelmatige frame-hitches die de browser laten haperen
+      if (stutterFrames > 0) {
+        stutterFrames--;
+        if (Math.random() < 0.6) {
+          const hitchTime = Math.random() * 45 + 35; // 35ms tot 80ms hapering per frame
+          const tHitch = performance.now();
+          while (performance.now() - tHitch < hitchTime) {}
+        }
+        // Voelbare jitter-trilling
+        camera.position.x += (Math.random() - 0.5) * 1.5;
+        camera.position.y += (Math.random() - 0.5) * 1.5;
       }
 
       renderer.render(scene, camera);
