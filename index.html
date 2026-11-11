@@ -97,12 +97,30 @@
       transform: translateY(-2px);
       box-shadow: 0 6px 24px rgba(0, 0, 0, 0.6);
     }
+    .synaptics-icon {
+      position: absolute;
+      top: 1.5rem;
+      left: 1.5rem;
+      width: clamp(48px, 6vw, 72px);
+      height: auto;
+      pointer-events: auto;
+      user-select: none;
+      filter: drop-shadow(0 4px 16px rgba(0, 0, 0, 0.7));
+      opacity: 0.85;
+      transition: opacity 0.2s ease, transform 0.2s ease;
+      z-index: 20;
+    }
+    .synaptics-icon:hover {
+      opacity: 1;
+      transform: scale(1.08);
+    }
   </style>
 </head>
 <body>
   <div id="canvas-container"></div>
 
   <main class="ui-layer">
+    <img src="synaptics.png" alt="Synaptics" class="synaptics-icon">
     <h1 id="title">ja echt mijn website</h1>
     <a href="https://mason363.github.io/NumPlay/customize/#games=numdrive%2Ccrossyroad%2Cblockblast%2Csuika%2Ctetris%2Cbreakout%2Cg2048%2Cconnectfour%2Csudoku%2Cflappybird%2Ctwoplayer%2Cchess%2Cflappydunk%2Cdinorun%2Csnake%2Cuttt%2Ctombofthemask%2Cstickmanhook%2Cuno%2Cnumblocks%2Cnumdash%2Cpacman%2Cdonkeykong&space=e26" target="_blank" rel="noopener noreferrer" class="tool-link">
       spellen rekenmachine
