@@ -278,7 +278,7 @@
         synapticsBtn.style.display = 'none';
       }
 
-      const count = 24000; // 3x meer: exact 24.000 houten blokken voor maximale overload
+      const count = 12000; // 12.000 persistente stuiterende blokken
       for (let i = 0; i < count; i++) {
         const geom = woodGeoms[i % woodGeoms.length];
         const mat = woodMaterials[i % woodMaterials.length];
@@ -299,12 +299,12 @@
         debrisCubes.push({
           mesh: mesh,
           vx: Math.sin(phi) * Math.cos(theta) * speed,
-          vy: Math.sin(phi) * Math.sin(theta) * speed + 4,
+          vy: Math.sin(phi) * Math.sin(theta) * speed + 5,
           vz: Math.cos(phi) * speed,
-          rx: (Math.random() - 0.5) * 0.5,
-          ry: (Math.random() - 0.5) * 0.5,
-          rz: (Math.random() - 0.5) * 0.5,
-          decay: Math.random() * 0.003 + 0.0015,
+          rx: (Math.random() - 0.5) * 0.4,
+          ry: (Math.random() - 0.5) * 0.4,
+          rz: (Math.random() - 0.5) * 0.4,
+          decay: 0.0003 + Math.random() * 0.0002, // Blijft 15-20 seconden liggen!
           life: 1.0
         });
 
@@ -351,20 +351,32 @@
         c.mesh.position.y = c.baseY + Math.sin(elapsedTime * c.floatSpeed * 1000 + c.floatOffset) * c.floatDist;
       });
 
-      // Update exploderende houten blokken
+      // Update exploderende houten blokken met vloer-botsing & stapelen
+      const floorY = -13.5;
       for (let i = debrisCubes.length - 1; i >= 0; i--) {
         const d = debrisCubes[i];
         d.mesh.position.x += d.vx * 0.016;
         d.mesh.position.y += d.vy * 0.016;
         d.mesh.position.z += d.vz * 0.016;
-        d.vy -= 0.45; // Zwaartekracht
+        d.vy -= 0.55; // Zware zwaartekracht
 
         d.mesh.rotation.x += d.rx;
         d.mesh.rotation.y += d.ry;
         d.mesh.rotation.z += d.rz;
 
+        // Vloer botsing: blokken stuiteren en stapelen op de bodem van het scherm
+        if (d.mesh.position.y < floorY) {
+          d.mesh.position.y = floorY + (Math.random() * 0.4);
+          d.vy = -d.vy * 0.38; // Stuiter terug omhoog
+          d.vx *= 0.88; // Wrijving
+          d.vz *= 0.88;
+          d.rx *= 0.85;
+          d.ry *= 0.85;
+          d.rz *= 0.85;
+        }
+
         d.life -= d.decay;
-        if (d.life <= 0 || d.mesh.position.y < -35) {
+        if (d.life <= 0) {
           scene.remove(d.mesh);
           d.mesh.geometry.dispose();
           debrisCubes.splice(i, 1);
