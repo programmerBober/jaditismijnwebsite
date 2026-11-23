@@ -110,6 +110,41 @@
     .synaptics-icon:active {
       transform: scale(0.9);
     }
+    #rickroll-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 9999;
+      background: #000;
+      display: none;
+      align-items: center;
+      justify-content: center;
+    }
+    #rickroll-overlay.active {
+      display: flex;
+    }
+    #rickroll-video {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+    #rickroll-close {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+      z-index: 10000;
+      background: rgba(255, 255, 255, 0.12);
+      color: #fff;
+      border: 1px solid rgba(255, 255, 255, 0.25);
+      border-radius: 8px;
+      width: 2.5rem;
+      height: 2.5rem;
+      font-size: 1.4rem;
+      line-height: 1;
+      cursor: pointer;
+    }
+    #rickroll-close:hover {
+      background: rgba(255, 255, 255, 0.25);
+    }
   </style>
 </head>
 <body>
@@ -122,6 +157,11 @@
       spellen rekenmachine
     </a>
   </main>
+
+  <div id="rickroll-overlay">
+    <video id="rickroll-video" src="rickroll.mp4" playsinline loop preload="none"></video>
+    <button id="rickroll-close" aria-label="Sluiten">×</button>
+  </div>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
   <script>
@@ -169,7 +209,39 @@
 
     for (let i = 0; i < cubeCount; i++) {
       const size = Math.random() * 2.2 + 0.8;
-      const geometry = new THREE.BoxGeometry(size, size, size);
+      // Irritant asymmetrische dimensies (geen enkele kubus is 1:1:1)
+      const sx = size * (1 + (Math.random() * 0.28 - 0.14));
+      const sy = size * (1 + (Math.random() * 0.28 - 0.14));
+      const sz = size * (1 + (Math.random() * 0.28 - 0.14));
+      const geometry = new THREE.BoxGeometry(sx, sy, sz);
+
+      // Subtiele hoek-jitter: hoeken net geen 90°, ribben lopen net niet parallel
+      const cornerOffsets = {};
+      [-1, 1].forEach(cx => {
+        [-1, 1].forEach(cy => {
+          [-1, 1].forEach(cz => {
+            cornerOffsets[`${cx},${cy},${cz}`] = {
+              x: (Math.random() - 0.5) * size * 0.16,
+              y: (Math.random() - 0.5) * size * 0.16,
+              z: (Math.random() - 0.5) * size * 0.16
+            };
+          });
+        });
+      });
+
+      const pos = geometry.attributes.position;
+      for (let v = 0; v < pos.count; v++) {
+        const vx = pos.getX(v);
+        const vy = pos.getY(v);
+        const vz = pos.getZ(v);
+        const cx = vx >= 0 ? 1 : -1;
+        const cy = vy >= 0 ? 1 : -1;
+        const cz = vz >= 0 ? 1 : -1;
+        const offset = cornerOffsets[`${cx},${cy},${cz}`];
+        pos.setXYZ(v, vx + offset.x, vy + offset.y, vz + offset.z);
+      }
+      geometry.computeVertexNormals();
+
       const mesh = new THREE.Mesh(geometry, whiteMaterial);
       
       const x = (Math.random() - 0.5) * 50;
@@ -414,11 +486,47 @@
       ];
 
       let clickCount = 0;
+      const rrOverlay = document.getElementById('rickroll-overlay');
+      const rrVideo = document.getElementById('rickroll-video');
+      const rrClose = document.getElementById('rickroll-close');
+
+      function playRickroll() {
+        rrOverlay.classList.add('active');
+        rrVideo.currentTime = 0;
+        rrVideo.muted = false;
+        rrVideo.play().catch(() => {
+          rrVideo.muted = true;
+          rrVideo.play();
+        });
+      }
+
+      function stopRickroll() {
+        rrVideo.pause();
+        rrOverlay.classList.remove('active');
+      }
+
+      rrClose.addEventListener('click', (e) => {
+        e.stopPropagation();
+        stopRickroll();
+      });
+
+      window.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && rrOverlay.classList.contains('active')) {
+          stopRickroll();
+        }
+      });
 
       titleEl.addEventListener('click', (e) => {
         e.stopPropagation();
-        clickCount = (clickCount + 1) % introPhrases.length;
-        titleEl.textContent = introPhrases[clickCount];
+        clickCount++;
+
+        if (clickCount < introPhrases.length) {
+          titleEl.textContent = introPhrases[clickCount];
+        } else {
+          clickCount = 0;
+          titleEl.textContent = introPhrases[0];
+          playRickroll();
+        }
 
         // Extra spin aan de 3D-kubussen geven
         if (typeof cubes !== 'undefined') {
