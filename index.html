@@ -110,17 +110,29 @@
     .synaptics-icon:active {
       transform: scale(0.9);
     }
-    .door-bottom-right {
+    .door-group {
       position: absolute;
       bottom: 1.5rem;
       right: 1.5rem;
-      width: clamp(52px, 6vw, 76px);
-      height: auto;
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      z-index: 20;
       pointer-events: auto;
+    }
+    .doorbell-icon {
+      width: clamp(20px, 2.2vw, 28px);
+      height: auto;
       user-select: none;
       opacity: 0.9;
       filter: drop-shadow(0 4px 16px rgba(0, 0, 0, 0.7));
-      z-index: 20;
+    }
+    .door-bottom-right {
+      width: clamp(52px, 6vw, 76px);
+      height: auto;
+      user-select: none;
+      opacity: 0.9;
+      filter: drop-shadow(0 4px 16px rgba(0, 0, 0, 0.7));
     }
     #rickroll-overlay {
       position: fixed;
@@ -164,7 +176,10 @@
 
   <main class="ui-layer">
     <img src="synaptics.png" alt="Synaptics" class="synaptics-icon">
-    <img src="door.png" alt="Deur" class="door-bottom-right">
+    <div class="door-group">
+      <img src="doorbell.png" alt="Deurbel" class="doorbell-icon">
+      <img src="door.png" alt="Deur" class="door-bottom-right">
+    </div>
     <h1 id="title">ja echt mijn website</h1>
     <a href="https://mason363.github.io/NumPlay/customize/#games=numdrive%2Ccrossyroad%2Cblockblast%2Csuika%2Ctetris%2Cbreakout%2Cg2048%2Cconnectfour%2Csudoku%2Cflappybird%2Ctwoplayer%2Cchess%2Cflappydunk%2Cdinorun%2Csnake%2Cuttt%2Ctombofthemask%2Cstickmanhook%2Cuno%2Cnumblocks%2Cnumdash%2Cpacman%2Cdonkeykong&space=e26" target="_blank" rel="noopener noreferrer" class="tool-link">
       spellen rekenmachine
